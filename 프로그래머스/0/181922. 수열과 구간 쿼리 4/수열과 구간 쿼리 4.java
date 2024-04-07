@@ -12,7 +12,7 @@ class Solution {
 
             for (int j = s; j <= e; j++) {
                 if (j % k == 0) {
-                    answer[j] = arr[j] + 1;
+                    answer[j] = arr[j] += 1;
                 }
             }
 
