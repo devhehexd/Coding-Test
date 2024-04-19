@@ -1,19 +1,55 @@
-import java.util.Arrays;
+import java.util.*;
 
 class Solution {
     public int solution(int a, int b, int c, int d) {
-        int[] arr = {a,b,c,d};
-        Arrays.sort(arr);
-        a=arr[0]; b=arr[1]; c=arr[2]; d=arr[3];  // a~d를 낮은수부터 정렬
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int data : new int[]{a, b, c, d}) {
+            if (map.containsKey(data)) map.put(data, map.get(data) + 1);
+            else map.put(data, 1);
+        }
 
-        return
-        a == d ? a * 1111 :            // 네수가 같을 때
-        a == c ? (10 * a + d) * (10 * a + d) : // abc가 같을 때
-        b == d ? (10 * b + a) * (10 * b + a) : // bcd가 같을 때
-        a == b & c == d ? c * c - a * a :           // 두개씩 두쌍이 같을 때
-        a == b ? c * d :               // ab가 같을 때
-        b == c ? a * d :               // bc가 같을 때
-        c == d ? a * b :               // cd가 같을 때
-        a;                              // 모두 다를 때
+        PriorityQueue<Dice> pq = new PriorityQueue<>();
+        for (int key : map.keySet())
+            pq.add(new Dice(key, map.get(key)));
+
+        int answer = 0;
+
+        if (pq.size() == 1) answer = pq.poll().number * 1111;
+        else if (pq.size() == 3) {
+            pq.poll();
+            answer = pq.poll().number * pq.poll().number;
+        } else if (pq.size() == 4) {
+            pq.poll(); pq.poll(); pq.poll();
+            answer = pq.poll().number;
+        } else {
+            Dice maxDice = pq.poll();
+            Dice next = pq.poll();
+            if (maxDice.count == 3) {
+                answer = (10 * maxDice.number + next.number) * (10 * maxDice.number + next.number);
+            }
+            else {
+                answer = (maxDice.number + next.number) * ((int)(Math.abs(maxDice.number - next.number)));
+            }
+        }
+        return answer;
+
+
+    }
+
+    public class Dice implements Comparable<Dice> {
+        int number;
+        int count;
+
+        public Dice(int number, int count) {
+            this.number = number;
+            this.count = count;
+        }
+
+        public int compareTo(Dice o) {
+            if (this.count == o.count)
+                return o.number - this.number;
+            return o.count - this.count;
+        }
+
     }
 }
