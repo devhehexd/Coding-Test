@@ -14,14 +14,10 @@ class Solution {
             for (int i = 1; i < prefix.length(); i++) {
                 if (map.containsKey(prefix.substring(0, i))) {
                     answer = false;
-                    break;
-                } else {
-                    answer = true;
-                }
+                    return answer;
+                } 
             }
-            if (!answer) {
-                break;
-            }
+            
         }
         return answer;
     }
