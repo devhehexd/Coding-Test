@@ -1,46 +1,27 @@
 import sys
-input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
 
-# 정점의 수 V
+# 재귀
 V = int(input())
-
-# 간선의 수 E
 E = int(input())
 
-# 인접 리스트 표현
-graph = []
-
-for _ in range(V + 1):
-  graph.append([])
-
-# 간선의 정보 E 개
+# 인접리스트
+adj_list = [[] for _ in range(V + 1)]
 for _ in range(E):
-  start, end = list(map(int, input().split()))
-  graph[start].append(end)
-  graph[end].append(start)
+  s, e = map(int, input().split())
+  adj_list[s].append(e)
+  adj_list[e].append(s)
 
-# for row in graph:
-#   print(row)
+# 초기 세팅(출발지, 기록지)
+visited = [0] * (V + 1)
 
-start = 1
-count = 0
-
-from collections import deque
-
-queue = deque()
-visited = set()
-
-queue.append(start)
-visited.add(start)
-
-while queue:
-  node = queue.popleft()
+# 반복(방문과 탐색)
+def DFS(cur):
+  visited[cur] = 1
   
-  for adj_node in graph[node]:
-    if adj_node not in visited:
-      visited.add(adj_node)
-      count += 1
-      queue.append(adj_node)
+  for nxt in adj_list[cur]:
+    if not visited[nxt]:
+      DFS(nxt)
       
-
-print(count)
+DFS(1)
+print(sum(visited)-1)
